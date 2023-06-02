@@ -1,0 +1,166 @@
+---
+title: "KAGGLE’DEN BİR VERİ ANALİZ  ETME"
+author: "Durmuş Can Çalışkan"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+## KAGGLE'DAN VERİ SETİ ALMA VE R  STUDİO'YA AKTARMA <br>
+
+KAGGLE sitesine girdikten sonra soldaki menüden veri kümelerine
+giriyoruz. karşımıza çıkan veri kümelerinden bize en uygun olanını
+seçiyoruz.<br> Biz bu alıştırmamızda Nüfusa Göre 2023 Ülkeleri verisini
+kullanacağız.<br> Verimizde 1980, 2000, 2010, 2020, 2022 ve 2023
+verilerinin yanısıra öngörü halinde 2030 ve 2050 verileri , ülkelerin
+isimleri, yüz ölçümleri gibi bilgiler yer almaktadır. <br><br> Verideki
+bazı kısaltmalar şu şekildedir:<br> - place: bölgenin adı<br> - pop1980:
+1980 yılı için nüfus<br> - pop2000: 2000 yılı için nüfus<br> - pop2010:
+2010 yılı için nüfus<br> - pop2022: 2022 yılı için nüfus<br> - pop2023:
+2023 yılı için nüfus<br> - pop2030: 2030 yılı için tahmini nüfus<br> -
+pop2050: 2050 yılı için tahmini nüfus<br> - country: ülkenin ismi<br> -
+landAreaKm: Ülkenin yüzölçümü (kilometrekare olarak)<br> - cca2: Ülkenin
+ISO 3166-1 alpha-2 kodu<br> - cca3: Ülkenin ISO 3166-1 alpha-3
+kodu<br> - rank: Ülkenin nüfusa göre sıralaması<br><br> Öncelikle
+getwd() komutumuzu yazarak çalışma dizinimizin nerde olduğuna bakıyoruz.
+Çalışma dizinimiz verimizin olduğu dosyada değilse setwd(" verimizin
+olduğu dosyanın uzantısı" ) şeklinde çalışma dizinimizi
+düzenliyoruz.<br> Ardından; veri \<- read.csv (" dosyamızın adı.csv" ,
+header = T , sep = " , ") kodunu yazarak verimizi R studio'ya eklemiş
+oluyoruz. header'ı true yapma nedenimiz veri setindeki ilk satırı
+değişkenlerin isimleri olarak almasını sağlamak. Sep = " , " ise
+verilerin arasında ayrım yapmamızı sağlıyor. Veri dosyasına bağlı olarak
+bu Sep = " ; " şeklinde de kullanılabiliyor.<br>
+
+```{r}
+getwd() # çalışma dizinimizin nerde olduğuna bakıyoruz.
+setwd("C:/Users/90543/Desktop/r sunum") #çalışma dizinimizi verimizin olduğu dosyaya alıyoruz.
+veri <- read.csv ("2023veri.csv" , header = T , sep = ",")#veri dosyamızı data isminde bir nesneye atıyoruz.
+```
+
+## VERİDE ANALİZ YAPMA <br>
+
+head(veri) Veri setinin ilk birkaç satırını console sekmesinde
+görüntüler.<br>
+
+```{r}
+head(veri)
+```
+
+summary(veri) Veri setinin istatistiksel özetini sunar.
+
+```{r}
+summary(veri)
+```
+
+str(veri) Veri setinin yapısını gösterir (değişkenlerin türleri,
+uzunlukları vb.)
+
+```{r}
+str(veri)
+```
+
+ortalama \<- mean(veri\$pop2023) verideki pop2023 verilerinin ortalama
+değerini bulur.
+
+```{r}
+ortalama <- mean(veri$pop2023)
+ortalama
+```
+
+plot(veri$pop2050, veri$pop1980, col = "red") İki değişken arasındaki
+ilişkiyi görselleştirir
+
+```{r}
+plot(veri$pop2050, veri$pop1980, col = "red")
+```
+
+alt_degerler \<- veri$country[veri$pop1980 \< 50000] print(alt_degerler)
+Kodu ile pop1980 değişkeni 50,000'in altında olan kayıtların country
+verilerini yazdırıyoruz.
+
+```{r}
+alt_degerler <- veri$country[veri$pop1980 < 50000]
+print(alt_degerler)
+```
+
+ust_degerler \<- veri$country[veri$pop2050 \> 50000000]
+print(ust_degerler) Kodu ile pop2050 değişkeni 50.000.000'un üstünde
+olan kayıtların country verilerini yazdırıyoruz.
+
+```{r}
+ust_degerler <- veri$country[veri$pop2050 > 50000000]
+print(ust_degerler)
+```
+
+max_deger \<-
+max(veri$pop2010) Kodu ile pop2010 verisinin maksimum değerini buluyoruz. country <- veri$country[veri\$pop2010
+== max_deger] print(country) Kodu ile Maksimum değere sahip olan country
+verisini bulup yazdırıyoruz.
+
+```{r}
+max_deger <- max(veri$pop2010)
+country <- veri$country[veri$pop2010 == max_deger]
+print(country)
+```
+
+min_deger \<- min(veri$pop2050) country <- veri$country[veri\$pop2050 ==
+min_deger] print(country) Kodu ile 2050 verisinin minimumu için
+yapıyoruz:
+
+```{r}
+min_deger <- min(veri$pop2050)
+country <- veri$country[veri$pop2050 == min_deger]
+print(country)
+```
+
+nufus_metrekare \<- veri$pop2023 / veri$landAreaKm Bu kod ile 2023
+nüfusu için metrekare başına ülke bazında düşen kişi sayısını buluyoruz.
+
+```{r}
+nufus_metrekare <- veri$pop2023 / veri$landAreaKm
+```
+
+nufus_metrekare_df \<- data.frame(nufus_metrekare) Ardından bu verileri
+yeni bir veri çerçevesi oluşturup burada tutuyoruz. Artık yeni bir
+nüfus_metrekare_df Adında bir veri tabanımız oluştu. Aynı zamanda bu
+veriyi büyük veri dosyamızın da içerisine aktarmış olduk. yeni oluşan
+veri tabanımızın İçerisinde de metrekare Başına düşen kişi sayımız
+mevcut oldu.
+
+```{r}
+nufus_metrekare_df <- data.frame(nufus_metrekare)
+nufus_metrekare_df
+```
+
+nufus_metrekare_df \<- data.frame(pop2023 =
+veri$pop2023, landAreaKm = veri$landAreaKm, country = veri\$country,
+nufus_metrekare) kodu ile veri çerçevesinin içine 2023 nüfus verisini,
+yüzölçümünü , ülke ismini ve metrekare başına nüfus sayısını
+aktarıyoruz.
+
+```{r}
+nufus_metrekare_df <- data.frame(pop2023 = veri$pop2023, landAreaKm = veri$landAreaKm, country = veri$country, nufus_metrekare)
+nufus_metrekare_df 
+```
+
+veri \<- veri[, !(names(veri) %in% c("cca2", "cca3"))] kodu ile
+verimizde gereksiz gördüğümüz cca2(Ülkenin ISO 3166-1 alpha-2 kodu) ve
+cca3(Ülkenin ISO 3166-1 alpha-3 kodu) verilerimizi siliyoruz.
+
+```{r}
+veri <- veri[, !(names(veri) %in% c("cca2", "cca3"))]
+veri
+```
+
+country_10 \<- veri$country[veri$rank == 10] print(country_10) Kodu ile
+nüfus sıralamasında 10. ülkenin ismini yazdırıyoruz.
+
+```{r}
+country_10 <- veri$country[veri$rank == 10] 
+print(country_10)
+```
+
+VERİ SETİ: <br>
+<https://www.kaggle.com/datasets/thabresh/2023-countries-by-population>
